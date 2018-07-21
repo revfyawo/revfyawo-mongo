@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='revfyawo.mongo',
-    version='0.0.2',
+    version='0.0.3',
     description='A mongo ODM',
     url='https://gitlab.com/revfyawo/mongo',
     author='Lucien Haurat',

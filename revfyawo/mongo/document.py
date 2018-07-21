@@ -73,8 +73,24 @@ class Document:
         return [cls(**doc) for doc in docs]
 
     @classmethod
+    def by_id(cls, id: ObjectId) -> Optional['Document']:
+        doc = cls._get_collection().find_one({'_id': {'$in': id}})
+        return cls(**doc) if doc else None
+
+    @classmethod
+    def by_ids(cls, ids: List[ObjectId]) -> List['Document']:
+        docs = cls._get_collection().find({'_id': {'$in': ids}})
+        return [cls(**doc) for doc in docs]
+
+    @classmethod
     def sample(cls, size: int) -> List['Document']:
-        docs = cls._get_collection().aggregate([{'$sample': {'size': size}}])
+        docs = cls._get_collection().aggregate([
+            {'$sample': {'size': size}},
+            {'$project': {'_id': True}}
+        ])
+        docs = cls._get_collection().find({
+            '_id': {'$in': [d['_id'] for d in docs]}
+        })
         return [cls(**doc) for doc in docs]
 
     def update(self):
