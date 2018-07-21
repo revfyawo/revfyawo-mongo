@@ -7,6 +7,9 @@ name = "pypi"
 pymongo = "~=3.7"
 
 [dev-packages]
+pipenv = "*"
+ipython = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.7"
