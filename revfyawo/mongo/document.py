@@ -22,6 +22,10 @@ class Document:
     def id(self) -> Optional[ObjectId]:
         return self._document.get('_id')
 
+    @property
+    def document(self) -> dict:
+        return self._document
+
     def __init__(self, **kwargs):
         hints = get_type_hints(self.__class__)
         self.Meta.fields = list(filter(lambda x: x not in not_fields, hints))
