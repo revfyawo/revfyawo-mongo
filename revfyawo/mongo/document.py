@@ -1,4 +1,3 @@
-import logging
 from typing import Optional, get_type_hints
 
 from bson import ObjectId
@@ -40,3 +39,6 @@ class Document:
     def find_one(cls, filter_=None) -> Optional['Document']:
         doc = cls.Meta.client[cls.Meta.db][cls.Meta.collection].find_one(filter_)
         return cls(**doc) if doc else None
+
+    def delete(self):
+        return self.Meta.client[self.Meta.db][self.Meta.collection].find_one_and_delete({'_id': self.id})
