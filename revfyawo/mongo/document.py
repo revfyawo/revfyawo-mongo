@@ -37,6 +37,13 @@ class Document:
     def __getattr__(self, item):
         if item in self.Meta.fields:
             return self._document.get(item)
+        raise AttributeError
+
+    def __setattr__(self, key, value):
+        if key in self.Meta.fields:
+            self._document[key] = value
+        else:
+            super(Document, self).__setattr__(key, value)
 
     def insert(self):
         return self._client[self._db][self._collection].insert_one(self._document)
