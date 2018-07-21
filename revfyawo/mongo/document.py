@@ -25,6 +25,10 @@ class Document:
     def set_db_name(cls, db_name: str):
         cls._db = db_name
 
+    @property
+    def id(self) -> Optional[ObjectId]:
+        return self._document.get('_id')
+
     def __init__(self, **kwargs):
         self._document = kwargs
         type_hints = get_type_hints(self.__class__)
