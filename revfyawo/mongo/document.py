@@ -1,4 +1,4 @@
-from typing import Optional, get_type_hints
+from typing import Optional, get_type_hints, List
 
 from bson import ObjectId
 from pymongo import MongoClient
@@ -62,9 +62,14 @@ class Document:
         return self.Meta.collection.insert_one(self._document)
 
     @classmethod
-    def find_one(cls, filter_=None) -> Optional['Document']:
+    def one(cls, filter_=None) -> Optional['Document']:
         doc = cls.Meta.collection.find_one(filter_)
         return cls(**doc) if doc else None
+
+    @classmethod
+    def many(cls, filter_=None) -> List['Document']:
+        docs = cls.Meta.collection.find(filter_)
+        return [cls(**doc) for doc in docs]
 
     def delete(self):
         return self.Meta.collection.find_one_and_delete({'_id': self.id})
