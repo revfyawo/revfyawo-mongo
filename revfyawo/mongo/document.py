@@ -72,6 +72,11 @@ class Document:
         docs = cls._get_collection().find(filter_)
         return [cls(**doc) for doc in docs]
 
+    @classmethod
+    def sample(cls, size: int) -> List['Document']:
+        docs = cls._get_collection().aggregate([{'$sample': {'size': size}}])
+        return [cls(**doc) for doc in docs]
+
     def update(self):
         return self._get_collection().find_one_and_replace({'_id': self.id}, self._document)
 
