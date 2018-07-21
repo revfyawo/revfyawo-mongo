@@ -1,3 +1,4 @@
+import logging
 from typing import Optional, get_type_hints
 
 from bson import ObjectId
@@ -36,5 +37,6 @@ class Document:
         return self.Meta.client[self.Meta.db][self.Meta.collection].insert_one(self._document)
 
     @classmethod
-    def one(cls, filter_=None):
-        return cls._client[cls._db][cls._collection].find_one(filter_)
+    def find_one(cls, filter_=None) -> Optional['Document']:
+        doc = cls.Meta.client[cls.Meta.db][cls.Meta.collection].find_one(filter_)
+        return cls(**doc) if doc else None
