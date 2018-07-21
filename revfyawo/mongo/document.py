@@ -71,5 +71,8 @@ class Document:
         docs = cls.Meta.collection.find(filter_)
         return [cls(**doc) for doc in docs]
 
+    def update(self):
+        return self.Meta.collection.find_one_and_replace({'_id': self.id}, self._document)
+
     def delete(self):
         return self.Meta.collection.find_one_and_delete({'_id': self.id})
