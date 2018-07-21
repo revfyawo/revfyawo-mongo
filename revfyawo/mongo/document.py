@@ -1,7 +1,10 @@
-from typing import Optional
+from typing import Optional, get_type_hints
 
 from bson import ObjectId
 from pymongo import MongoClient
+
+
+not_fields = ('_client', '_db', '_collection')
 
 
 class Document:
@@ -10,6 +13,9 @@ class Document:
     _collection: str = __name__.lower()
 
     _id: Optional[ObjectId] = None
+
+    class Meta:
+        fields = []
 
     @classmethod
     def set_client(cls, client: MongoClient):
@@ -21,6 +27,12 @@ class Document:
 
     def __init__(self, **kwargs):
         self._document = kwargs
+        type_hints = get_type_hints(self.__class__)
+        self.Meta.fields = list(filter(lambda x: x not in not_fields, type_hints))
+
+    def __getattr__(self, item):
+        if item in self.Meta.fields:
+            return self._document.get(item)
 
     def insert(self):
         return self._client[self._db][self._collection].insert_one(self._document)
