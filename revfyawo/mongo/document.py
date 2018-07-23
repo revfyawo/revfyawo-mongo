@@ -5,7 +5,7 @@ from bson import ObjectId
 from pymongo import MongoClient
 from pymongo.collection import Collection
 
-not_fields = ('_client', '_db', '_collection')
+not_fields = ('_client', '_db', '_collection',  '_indexes')
 
 
 class Document:
@@ -14,6 +14,8 @@ class Document:
     _client: MongoClient
     _db: str
     _collection: str
+
+    _indexes: List
 
     @property
     def id(self) -> Optional[ObjectId]:
@@ -42,6 +44,11 @@ class Document:
         else:
             super(Document, self).__setattr__(key, value)
 
+    def _ensure_indexes(self):
+        if not hasattr(self, '_indexes') or not self._indexes:
+            return
+        self._get_collection().create_indexes(self._indexes)
+
     @classmethod
     def connect(cls, client: Optional[MongoClient] = None,
                 db: str = '', collection: str = ''):
@@ -60,6 +67,7 @@ class Document:
         return cls._client[cls._db][cls._collection]
 
     def insert(self):
+        self._ensure_indexes()
         return self._get_collection().insert_one(self._document)
 
     @classmethod
@@ -94,6 +102,7 @@ class Document:
         return [cls(**doc) for doc in docs]
 
     def update(self):
+        self._ensure_indexes()
         return self._get_collection().find_one_and_replace({'_id': self.id}, self._document)
 
     def delete(self):
