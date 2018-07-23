@@ -30,6 +30,7 @@ class Document:
         self.__fields = list(filter(lambda x: x not in not_fields, hints))
         self.connect(self._client, self._db, self._collection)
         self._document = kwargs
+        self._ensure_indexes()
 
     def __getattr__(self, item):
         if item in self.__fields:
