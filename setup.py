@@ -4,7 +4,7 @@ setup(
     name='revfyawo.mongo',
     version='0.0.4',
     description='A mongo ODM',
-    url='https://gitlab.com/revfyawo/mongo',
+    url='https://github.com/revfyawo/revfyawo-mongo',
     author='Lucien Haurat',
     author_email='lucien.haurat@gmail.com',
     packages=['revfyawo.mongo'],
