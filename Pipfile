@@ -11,6 +11,8 @@ pipenv = "*"
 ipython = "*"
 pytest = "*"
 "revfyawo.mongo" = {editable = true, path = "."}
+wheel = "*"
+twine = "*"
 
 [requires]
 python_version = "3.7"
