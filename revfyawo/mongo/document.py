@@ -30,6 +30,7 @@ class Document:
         self.__fields = list(filter(lambda x: x not in not_fields, hints))
         self.connect(self._client, self._db, self._collection)
         self._document = kwargs
+        self._ensure_indexes()
 
     def __getattr__(self, item):
         if item in self.__fields:
@@ -91,14 +92,18 @@ class Document:
         return [cls(**doc) for doc in docs]
 
     @classmethod
-    def sample(cls, size: int) -> List['Document']:
-        docs = cls._get_collection().aggregate([
-            {'$sample': {'size': size}},
-            {'$project': {'_id': True}}
-        ])
-        docs = cls._get_collection().find({
-            '_id': {'$in': [d['_id'] for d in docs]}
-        })
+    def sample(cls, size: int, filter_=None, projection=None) -> List['Document']:
+        pipeline = []
+        if filter_:
+            pipeline.append({'$match': filter_})
+        pipeline.append({'$sample': {'size': size}})
+        pipeline.append({'$project': {'_id': True}})
+        docs = cls._get_collection().aggregate(pipeline)
+
+        docs = cls._get_collection().find(
+            {'_id': {'$in': [d['_id'] for d in docs]}},
+            projection=projection
+        )
         return [cls(**doc) for doc in docs]
 
     def update(self):
