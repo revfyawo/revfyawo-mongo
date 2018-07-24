@@ -92,14 +92,18 @@ class Document:
         return [cls(**doc) for doc in docs]
 
     @classmethod
-    def sample(cls, size: int) -> List['Document']:
-        docs = cls._get_collection().aggregate([
-            {'$sample': {'size': size}},
-            {'$project': {'_id': True}}
-        ])
-        docs = cls._get_collection().find({
-            '_id': {'$in': [d['_id'] for d in docs]}
-        })
+    def sample(cls, size: int, filter_=None, projection=None) -> List['Document']:
+        pipeline = []
+        if filter_:
+            pipeline.append({'$match': filter_})
+        pipeline.append({'$sample': {'size': size}})
+        pipeline.append({'$project': {'_id': True}})
+        docs = cls._get_collection().aggregate(pipeline)
+
+        docs = cls._get_collection().find(
+            {'_id': {'$in': [d['_id'] for d in docs]}},
+            projection=projection
+        )
         return [cls(**doc) for doc in docs]
 
     def update(self):
