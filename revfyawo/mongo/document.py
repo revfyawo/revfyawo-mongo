@@ -37,6 +37,10 @@ class Document:
             return self._document.get(item)
         raise AttributeError
 
+    def __delattr__(self, item):
+        if item in self.__fields and item in self._document:
+            del self._document[item]
+
     def __setattr__(self, key, value):
         if key == '_Document__fields':
             super(Document, self).__setattr__(key, value)
