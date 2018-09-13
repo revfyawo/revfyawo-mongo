@@ -13,6 +13,7 @@ pytest = "*"
 "revfyawo.mongo" = {editable = true, path = "."}
 wheel = "*"
 twine = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.7"
