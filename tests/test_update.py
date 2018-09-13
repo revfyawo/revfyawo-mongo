@@ -1,4 +1,4 @@
-from .models import Author
+from tests.models import Author
 
 
 def test_update(authors_collection, create_authors):

@@ -1,6 +1,6 @@
 from bson import ObjectId
 
-from .models import Author
+from tests.models import Author
 
 
 def test_find_one(create_authors):

@@ -1,6 +1,6 @@
 import datetime
 
-from .models import Author
+from tests.models import Author
 
 
 def test_create(author_dict):
