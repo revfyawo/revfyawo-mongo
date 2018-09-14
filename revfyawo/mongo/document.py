@@ -1,7 +1,7 @@
 from typing import Optional, get_type_hints, List
 
 from bson import ObjectId
-from pymongo import MongoClient
+from pymongo import MongoClient, IndexModel
 from pymongo.collection import Collection
 
 not_fields = ('_client', '_db', '_collection',  '_indexes')
@@ -14,7 +14,7 @@ class Document:
     _db: str
     _collection: str
 
-    _indexes: List
+    _indexes: List[IndexModel]
 
     @property
     def id(self) -> Optional[ObjectId]:
