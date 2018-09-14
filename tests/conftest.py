@@ -3,8 +3,21 @@ from datetime import datetime
 import pytest
 from pymongo import MongoClient
 
+from revfyawo.mongo import Document
+
 db_name = 'test_revfyawo_mongo'
-db_client = MongoClient()
+db_client = MongoClient(serverSelectionTimeoutMS=1000)
+
+
+@pytest.fixture(scope='session')
+def connect():
+    try:
+        Document.connect(client=db_client, db=db_name)
+        db_client.server_info()
+    except Exception:
+        raise
+    yield
+    db_client.drop_database(db_name)
 
 
 @pytest.fixture
