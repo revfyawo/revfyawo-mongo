@@ -1,4 +1,3 @@
-import logging
 from typing import Optional, get_type_hints, List
 
 from bson import ObjectId
@@ -25,11 +24,17 @@ class Document:
     def document(self) -> dict:
         return self._document
 
-    def __init__(self, **kwargs):
+    def __init__(self, document=None, **kwargs):
+        if document and kwargs:
+            raise AttributeError(f'Document creation attributes should be either '
+                                 f'a python dict or keyword arguments, not both')
         hints = get_type_hints(self.__class__)
         self.__fields = list(filter(lambda x: x not in not_fields, hints))
         self.connect(self._client, self._db, self._collection)
-        self._document = kwargs
+        if document:
+            self._document = document
+        else:
+            self._document = kwargs
         self._ensure_indexes()
 
     def __getattr__(self, item):
