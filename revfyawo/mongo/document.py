@@ -8,7 +8,7 @@ not_fields = ('_client', '_db', '_collection',  '_indexes')
 
 
 class Document:
-    _id: Optional[ObjectId]
+    _id: ObjectId
 
     _client: MongoClient
     _db: str
@@ -30,6 +30,7 @@ class Document:
                                  f'a python dict or keyword arguments, not both')
         hints = get_type_hints(self.__class__)
         self.__fields = list(filter(lambda x: x not in not_fields, hints))
+        self.__fields_types = {k: hints[k] for k in self.__fields}
         self.connect(self._client, self._db, self._collection)
         if document:
             self._document = document
