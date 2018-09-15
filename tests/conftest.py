@@ -16,7 +16,6 @@ def connect():
         db_client.server_info()
     except Exception:
         raise
-    yield
     db_client.drop_database(db_name)
 
 
