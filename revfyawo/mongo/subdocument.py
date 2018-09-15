@@ -1,0 +1,2 @@
+class SubDocument(dict):
+    pass
